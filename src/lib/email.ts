@@ -35,3 +35,31 @@ export async function sendVerificationEmail(
     `,
   });
 }
+
+export async function sendPasswordResetEmail(
+  to: string,
+  resetUrl: string
+): Promise<void> {
+  const from = process.env.SMTP_FROM ?? "noreply@deepest-dive.local";
+  const transport = createTransport();
+
+  await transport.sendMail({
+    from,
+    to,
+    subject: "Reset your Deepest Dive password",
+    text: `You requested a password reset.\n\nClick the link below to set a new password. This link expires in 1 hour.\n\n${resetUrl}\n\nIf you didn't request this, you can safely ignore this email.`,
+    html: `
+      <div style="font-family: sans-serif; max-width: 480px; margin: 0 auto;">
+        <h2 style="color: #1a1a2e;">Reset your Deepest Dive password</h2>
+        <p>Click the button below to set a new password. This link expires in <strong>1 hour</strong>.</p>
+        <div style="text-align: center; margin: 32px 0;">
+          <a href="${resetUrl}" style="background: #7cb9e8; color: #0d0d1a; padding: 12px 32px; border-radius: 8px; text-decoration: none; font-weight: 700; font-size: 15px;">
+            Reset Password
+          </a>
+        </div>
+        <p style="color: #666; font-size: 12px;">Or copy this link: <a href="${resetUrl}" style="color: #7cb9e8;">${resetUrl}</a></p>
+        <p style="color: #666; font-size: 12px;">If you didn't request a password reset, you can safely ignore this email.</p>
+      </div>
+    `,
+  });
+}

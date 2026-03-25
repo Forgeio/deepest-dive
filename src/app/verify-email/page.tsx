@@ -13,7 +13,6 @@ function VerifyEmailContent() {
   const [email, setEmail] = useState(emailParam);
   const [code, setCode] = useState("");
   const [serverError, setServerError] = useState("");
-  const [successMsg, setSuccessMsg] = useState("");
   const [loading, setLoading] = useState(false);
   const [resendLoading, setResendLoading] = useState(false);
   const [resendCooldown, setResendCooldown] = useState(0);
@@ -28,7 +27,6 @@ function VerifyEmailContent() {
   async function handleVerify(e: React.FormEvent) {
     e.preventDefault();
     setServerError("");
-    setSuccessMsg("");
 
     if (!email.trim()) {
       setServerError("Email is required.");
@@ -49,20 +47,19 @@ function VerifyEmailContent() {
       const data = await res.json();
       if (!res.ok) {
         setServerError(data.error ?? "Verification failed.");
+        setLoading(false);
       } else {
-        setSuccessMsg("Email verified! Redirecting to login…");
-        setTimeout(() => router.push("/login"), 2000);
+        router.refresh();
+        router.push("/login");
       }
     } catch {
       setServerError("Network error. Please try again.");
-    } finally {
       setLoading(false);
     }
   }
 
   async function handleResend() {
     setServerError("");
-    setSuccessMsg("");
 
     if (!email.trim()) {
       setServerError("Please enter your email.");
@@ -80,7 +77,6 @@ function VerifyEmailContent() {
       if (!res.ok) {
         setServerError(data.error ?? "Failed to resend code.");
       } else {
-        setSuccessMsg("A new code has been sent to your email.");
         setResendCooldown(60);
       }
     } catch {
@@ -99,7 +95,6 @@ function VerifyEmailContent() {
         </p>
 
         {serverError && <div className="alert alert-error">{serverError}</div>}
-        {successMsg && <div className="alert alert-success">{successMsg}</div>}
 
         <form onSubmit={handleVerify} noValidate>
           <div className="form-group">

@@ -53,6 +53,28 @@ a:hover {
   margin-bottom: 20px;
 }
 
+.form-group-inline {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.form-group-inline input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  accent-color: #7cb9e8;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.form-group-inline label {
+  font-size: 14px;
+  color: #ccc;
+  cursor: pointer;
+  user-select: none;
+}
+
 .form-group label {
   display: block;
   margin-bottom: 6px;

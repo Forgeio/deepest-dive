@@ -36,7 +36,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Invalid request body." }, { status: 400 });
   }
 
-  const { email, password } = body as Record<string, unknown>;
+  const { email, password, rememberMe } = body as Record<string, unknown>;
 
   const emailResult = validateEmail(email);
   if (!emailResult.valid) return NextResponse.json({ error: emailResult.error }, { status: 400 });
@@ -78,8 +78,9 @@ export async function POST(req: NextRequest) {
     await prisma.session.delete({ where: { id: existingSessionId } }).catch(() => {});
   }
 
-  const sessionId = await createSession(user.id);
-  await setSessionCookie(sessionId);
+  const remember = rememberMe === true;
+  const sessionId = await createSession(user.id, remember);
+  await setSessionCookie(sessionId, remember);
 
   return NextResponse.json(
     { message: "Login successful.", username: user.username },

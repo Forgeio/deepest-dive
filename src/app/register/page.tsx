@@ -24,7 +24,6 @@ export default function RegisterPage() {
   const [password, setPassword] = useState("");
   const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
   const [serverError, setServerError] = useState("");
-  const [successMsg, setSuccessMsg] = useState("");
   const [loading, setLoading] = useState(false);
 
   function validateClient(): FieldErrors {
@@ -57,7 +56,6 @@ export default function RegisterPage() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setServerError("");
-    setSuccessMsg("");
 
     const errors = validateClient();
     setFieldErrors(errors);
@@ -73,15 +71,12 @@ export default function RegisterPage() {
       const data = await res.json();
       if (!res.ok) {
         setServerError(data.error ?? "Registration failed. Please try again.");
+        setLoading(false);
       } else {
-        setSuccessMsg("Account created! Redirecting to email verification…");
-        setTimeout(() => {
-          router.push(`/verify-email?email=${encodeURIComponent(email.trim().toLowerCase())}`);
-        }, 1500);
+        router.push(`/verify-email?email=${encodeURIComponent(email.trim().toLowerCase())}`);
       }
     } catch {
       setServerError("Network error. Please try again.");
-    } finally {
       setLoading(false);
     }
   }
@@ -93,7 +88,6 @@ export default function RegisterPage() {
         <p className="subtitle">Join Deepest Dive and begin your adventure.</p>
 
         {serverError && <div className="alert alert-error">{serverError}</div>}
-        {successMsg && <div className="alert alert-success">{successMsg}</div>}
 
         <form onSubmit={handleSubmit} noValidate>
           <div className="form-group">
