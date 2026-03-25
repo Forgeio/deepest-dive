@@ -9,11 +9,13 @@ export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [serverError, setServerError] = useState("");
+  const [successMsg, setSuccessMsg] = useState("");
   const [loading, setLoading] = useState(false);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setServerError("");
+    setSuccessMsg("");
 
     if (!email.trim() || !password) {
       setServerError("Email and password are required.");
@@ -28,9 +30,15 @@ export default function LoginPage() {
         body: JSON.stringify({ email, password }),
       });
       const data = await res.json();
+      if (res.status === 403) {
+        // Account exists but email is not yet verified — send them to verify
+        router.push(`/verify-email?email=${encodeURIComponent(email.trim().toLowerCase())}`);
+        return;
+      }
       if (!res.ok) {
         setServerError(data.error ?? "Login failed. Please try again.");
       } else {
+        setSuccessMsg(`Welcome back, ${data.username}! Redirecting…`);
         router.push("/account");
       }
     } catch {
@@ -47,6 +55,7 @@ export default function LoginPage() {
         <p className="subtitle">Welcome back, adventurer.</p>
 
         {serverError && <div className="alert alert-error">{serverError}</div>}
+        {successMsg && <div className="alert alert-success">{successMsg}</div>}
 
         <form onSubmit={handleSubmit} noValidate>
           <div className="form-group">
@@ -78,10 +87,6 @@ export default function LoginPage() {
 
         <div className="auth-footer">
           Don&apos;t have an account? <Link href="/register">Register</Link>
-          <br />
-          <Link href="/verify-email" style={{ marginTop: "8px", display: "inline-block" }}>
-            Verify your email
-          </Link>
         </div>
       </div>
     </div>
