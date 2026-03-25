@@ -1,6 +1,6 @@
 # ⚔️ Deepest Dive
 
-A 2D Zelda-like online RPG — Next.js 14 (App Router) + TypeScript + PostgreSQL.
+A 2D Zelda-like online RPG — Next.js 15 (App Router) + TypeScript + PostgreSQL.
 
 ## Features
 
@@ -14,7 +14,7 @@ A 2D Zelda-like online RPG — Next.js 14 (App Router) + TypeScript + PostgreSQL
 
 | Layer | Choice |
 |---|---|
-| Framework | Next.js 14 (App Router) |
+| Framework | Next.js 15 (App Router) |
 | Language | TypeScript |
 | Database | PostgreSQL via Prisma |
 | Password hashing | Argon2id |
@@ -101,4 +101,3 @@ docker-compose.yml
 - **Rate limiting** on all auth endpoints (in-memory; swap for Redis in production)
 - **Security headers** set via `next.config.ts` (CSP, X-Frame-Options, etc.)
 - Sessions use `httpOnly; SameSite=Lax` cookies; rotated on login
-2D Zelda-like online RPG

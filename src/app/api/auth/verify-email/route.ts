@@ -58,7 +58,7 @@ export async function POST(req: NextRequest) {
   if (!verification) return NextResponse.json({ error: genericError }, { status: 400 });
 
   if (verification.expiresAt < new Date()) {
-    return NextResponse.json({ error: "Verification code has expired. Please request a new one." }, { status: 400 });
+    return NextResponse.json({ error: genericError }, { status: 400 });
   }
 
   if (verification.attempts >= MAX_ATTEMPTS) {
